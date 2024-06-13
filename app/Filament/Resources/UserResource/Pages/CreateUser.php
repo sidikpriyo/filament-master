@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
-use Filament\Actions;
+use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -14,7 +14,6 @@ class CreateUser extends CreateRecord
     protected static ?string $breadcrumb = "Create User";
 
     protected static ?string $title = 'Create New User';
-
     /**
      * getFormActions : custom button action in create form
      *
@@ -55,11 +54,29 @@ class CreateUser extends CreateRecord
      */
     protected function getCreatedNotification(): ?Notification
     {
-        return Notification::make()
+        $recipient = auth()->user();
+        $record = $this->getRecord();
+        // $url = $this->getResource()::getUrl('edit', ['record' => $record->id]);
+
+        $notification = Notification::make()
             ->success()
             ->title('Create User Successfully!')
-            ->body('User : ' . $this->getRecord()->name . 'is successfully created.')
-            ->seconds(6)
-            ->send();
+            ->body('User: ' . $record->name . ' is successfully created by ' . $recipient->name . '.')
+            ->actions([
+                Action::make('markAsRead')
+                    ->icon('heroicon-m-eye')
+                    ->iconButton()
+                    ->button()
+                    // ->url($url) // Provide the correct URL here
+                    ->markAsRead(),
+                Action::make('markAsUnread')
+                    ->button()
+                    ->icon('heroicon-m-eye-slash')
+                    ->color('danger')
+                    ->markAsUnread(),
+            ])
+            ->sendToDatabase($recipient);
+
+        return $notification;
     }
 }
