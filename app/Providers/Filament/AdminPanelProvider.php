@@ -17,12 +17,12 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use JulioMotol\FilamentPasswordConfirmation\FilamentPasswordConfirmationPlugin;
 use Awcodes\LightSwitch\LightSwitchPlugin;
 use Awcodes\LightSwitch\Enums\Alignment;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -36,6 +36,7 @@ class AdminPanelProvider extends PanelProvider
             ->registration()
             ->passwordReset()
             ->emailVerification()
+            ->databaseNotifications()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -82,6 +83,22 @@ class AdminPanelProvider extends PanelProvider
                     ->passwordTimeout(10800),
                 LightSwitchPlugin::make()
                     ->position(Alignment::TopRight),
+                FilamentShieldPlugin::make()
+                    ->gridColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 2,
+                    ])
+                    ->sectionColumnSpan(1)
+                    ->checkboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 3,
+                    ])
+                    ->resourceCheckboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                    ]),
             ]);
     }
 }
