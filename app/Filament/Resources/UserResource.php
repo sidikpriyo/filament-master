@@ -82,11 +82,6 @@ class UserResource extends Resource
                                                 ]),
                                         ])->columnSpan(2),
                                     Section::make()
-                                        ->columns([
-                                            'sm' => 3,
-                                            'xl' => 6,
-                                            '2xl' => 1,
-                                        ])
                                         ->schema([
                                             Forms\Components\FileUpload::make('avatar_url')
                                                 ->label('Photo profile')
@@ -155,13 +150,13 @@ class UserResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->modalHeading(fn (User $record) => 'Delete User ' . $record->name . ' ?')
-                    ->modalDescription('Are you sure you\'d like to delete this user? This cannot be undone.')
+                    ->modalDescription('Are you sure you\'d like to delete this user? This data will be moved to trash.')
                     ->modalSubmitActionLabel('Yes, delete it')
                     ->successNotification(
                         Notification::make()
                             ->success()
-                            ->title('User deleted')
-                            ->body('The user has been deleted successfully.')
+                            ->title('User Deleted Successfully!')
+                            ->body('The user has been successfully deleted.')
                     ),
                 Tables\Actions\ForceDeleteAction::make()
                     ->modalHeading(fn (User $record) => 'Delete User ' . $record->name . ' Permanently ?')
@@ -170,10 +165,19 @@ class UserResource extends Resource
                     ->successNotification(
                         Notification::make()
                             ->success()
-                            ->title('User deleted permanently')
-                            ->body('The user has been deleted successfully.')
+                            ->title('User Permanently Deleted Successfully!')
+                            ->body('The user has been successfully deleted permanently.')
                     ),
-                Tables\Actions\RestoreAction::make(),
+                Tables\Actions\RestoreAction::make()
+                    ->modalHeading(fn (User $record) => 'Restore User ' . $record->name . '?')
+                    ->modalDescription('Are you sure you\'d like to restore this user? This data will be restored in the list.')
+                    ->modalSubmitActionLabel('Yes, restore')
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('User Restored Successfully!')
+                            ->body('The user has been successfully restored.')
+                    ),
             ])
             ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make(), Tables\Actions\ForceDeleteBulkAction::make(), Tables\Actions\RestoreBulkAction::make()])]);
     }

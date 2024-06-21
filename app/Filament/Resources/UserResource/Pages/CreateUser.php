@@ -60,7 +60,7 @@ class CreateUser extends CreateRecord
 
         $notification = Notification::make()
             ->success()
-            ->title('Create User Successfully!')
+            ->title('User Created Successfully!')
             ->body('User: ' . $record->name . ' is successfully created by ' . $recipient->name . '.')
             ->actions([
                 Action::make('markAsRead')

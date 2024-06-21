@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Models\User;
 use Filament\Actions;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
@@ -20,11 +21,39 @@ class EditUser extends EditRecord
     {
         return [
             Actions\DeleteAction::make()
-                ->icon('heroicon-o-trash'),
+                ->icon('heroicon-o-trash')
+                ->modalHeading(fn (User $record) => 'Delete User ' . $record->name . ' ?')
+                ->modalDescription('Are you sure you\'d like to delete this user? This data will be moved to trash.')
+                ->modalSubmitActionLabel('Yes, delete it')
+                ->successNotification(
+                    Notification::make()
+                        ->success()
+                        ->title('User Deleted Successfully!')
+                        ->body('The user has been successfully deleted.')
+                ),
             Actions\ForceDeleteAction::make()
-                ->icon('heroicon-o-trash'),
+                ->icon('heroicon-o-trash')
+                ->modalHeading(fn (User $record) => 'Delete User ' . $record->name . ' Permanently ?')
+                ->modalDescription('Are you sure you\'d like to delete this user? This data will be permanently deleted.')
+                ->modalSubmitActionLabel('Yes, delete permanently')
+                ->successNotification(
+                    Notification::make()
+                        ->success()
+                        ->title('User Permanently Deleted Successfully!')
+                        ->body('The user has been successfully deleted permanently.')
+                ),
             Actions\RestoreAction::make()
-                ->icon('heroicon-o-arrow-left-start-on-rectangle')->color('info'),
+                ->icon('heroicon-o-arrow-left-start-on-rectangle')
+                ->color('info')
+                ->modalHeading(fn (User $record) => 'Restore User ' . $record->name . '?')
+                ->modalDescription('Are you sure you\'d like to restore this user? This data will be restored in the list.')
+                ->modalSubmitActionLabel('Yes, restore')
+                ->successNotification(
+                    Notification::make()
+                        ->success()
+                        ->title('User Restored Successfully!')
+                        ->body('The user has been successfully restored.')
+                ),
         ];
     }
 
@@ -58,7 +87,7 @@ class EditUser extends EditRecord
 
         return Notification::make()
             ->success()
-            ->title('Update User Successfully!')
+            ->title('User Updated Successfully!')
             ->body('User : ' . $this->getRecord()->name . ' is successfully updated by ' . $recipient->name . '.')
             ->actions([
                 Action::make('view')
